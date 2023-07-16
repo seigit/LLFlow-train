@@ -1,0 +1,4 @@
+python test.py --opt C:/Users/sei/anaconda3/envs/LLFlow/LLFlow/code/confs/ExLPose01.yml
+python test.py --opt C:/Users/sei/anaconda3/envs/LLFlow/LLFlow/code/confs/ExLPose02.yml
+
+python train.py --opt C:/Users/sei/anaconda3/envs/LLFlow/LLFlow/code/confs/ExLPose01.yml
