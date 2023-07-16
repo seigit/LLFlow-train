@@ -1,0 +1,124 @@
+23-07-16 11:08:32.221 - INFO:   name: train_color_as_full_z_nosieMapBugFixed_noavgpool
+  use_tb_logger: True
+  model: LLFlow
+  distortion: sr
+  scale: 1
+  gpu_ids: [0]
+  dataset: LoL
+  optimize_all_z: False
+  cond_encoder: ConEncoder1
+  train_gt_ratio: 0.2
+  avg_color_map: False
+  concat_histeq: True
+  histeq_as_input: False
+  concat_color_map: False
+  gray_map: False
+  align_condition_feature: False
+  align_weight: 0.001
+  align_maxpool: True
+  to_yuv: False
+  encode_color_map: False
+  le_curve: False
+  datasets:[
+    train:[
+      root: C:\Users\sei\Downloads\ExLPose\ExLPose
+      quant: 32
+      use_shuffle: True
+      n_workers: 8
+      batch_size: 16
+      use_flip: True
+      color: RGB
+      use_crop: True
+      GT_size: 160
+      noise_prob: 0
+      noise_level: 5
+      log_low: True
+      gamma_aug: False
+      phase: train
+      scale: 1
+      data_type: img
+    ]
+    val:[
+      root: C:\Users\sei\Downloads\ExLPose\ExLPose
+      n_workers: 1
+      quant: 32
+      n_max: 20
+      batch_size: 1
+      log_low: True
+      phase: val
+      scale: 1
+      data_type: img
+    ]
+  ]
+  dataroot_unpaired: None
+  dataroot_GT: C:\Users\sei\anaconda3\envs\CPN\pytorch-cpn\data\ExLPose\bright_test
+  dataroot_LR: C:\Users\sei\anaconda3\envs\CPN\pytorch-cpn\data\ExLPose\dark_test
+  model_path: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow\code\checkpoints\LOL.pth
+  heat: 0
+  network_G:[
+    which_model_G: LLFlow
+    in_nc: 3
+    out_nc: 3
+    nf: 64
+    nb: 24
+    train_RRDB: False
+    train_RRDB_delay: 0.5
+    flow:[
+      K: 12
+      L: 3
+      noInitialInj: True
+      coupling: CondAffineSeparatedAndCond
+      additionalFlowNoAffine: 2
+      split:[
+        enable: False
+      ]
+      fea_up0: True
+      stackRRDB:[
+        blocks: [1, 3, 5, 7]
+        concat: True
+      ]
+    ]
+    scale: 1
+  ]
+  path:[
+    strict_load: True
+    resume_state: auto
+    root: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow
+    experiments_root: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow\experiments\train_color_as_full_z_nosieMapBugFixed_noavgpool
+    models: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow\experiments\train_color_as_full_z_nosieMapBugFixed_noavgpool\models
+    training_state: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow\experiments\train_color_as_full_z_nosieMapBugFixed_noavgpool\training_state
+    log: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow\experiments\train_color_as_full_z_nosieMapBugFixed_noavgpool
+    val_images: C:\Users\sei\anaconda3\envs\LLFlow\LLFlow\experiments\train_color_as_full_z_nosieMapBugFixed_noavgpool\val_images
+  ]
+  train:[
+    manual_seed: 10
+    lr_G: 0.0005
+    weight_decay_G: 0
+    beta1: 0.9
+    beta2: 0.99
+    lr_scheme: MultiStepLR
+    warmup_iter: 10
+    lr_steps_rel: [0.5, 0.75, 0.9, 0.95]
+    lr_gamma: 0.5
+    weight_l1: 0
+    weight_fl: 1
+    niter: 30000
+    val_freq: 200
+    lr_steps: [15000, 22500, 27000, 28500]
+  ]
+  val:[
+    n_sample: 4
+  ]
+  test:[
+    heats: [0.0, 0.7, 0.8, 0.9]
+  ]
+  logger:[
+    print_freq: 200
+    save_checkpoint_freq: 1000.0
+  ]
+  is_train: True
+  dist: False
+
+23-07-16 11:08:32.901 - INFO: Random seed: 10
+23-07-16 11:12:30.359 - INFO: Model [LLFlowModel] is created.
+23-07-16 11:12:30.377 - INFO: Start training from epoch: 0, iter: 0
