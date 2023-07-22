@@ -10,6 +10,7 @@ from torchvision.transforms import ToTensor
 import random
 import torchvision.transforms as T
 from tqdm import tqdm
+from glob import glob
 
 
 # import pdb
@@ -42,21 +43,25 @@ class LoL_Dataset(data.Dataset):
         return len(self.pairs)
 
     def load_pairs(self, folder_path):
-        low_list = os.listdir(os.path.join(folder_path, 'low'))
-        low_list = filter(lambda x: 'png' in x, low_list)
-        high_list = os.listdir(os.path.join(folder_path, 'high'))
-        high_list = filter(lambda x: 'png' in x, high_list)
+        #low_list = os.listdir(os.path.join(folder_path, 'low'))
+        #low_list = filter(lambda x: 'png' in x, low_list)
+        #high_list = os.listdir(os.path.join(folder_path, 'high'))
+        #high_list = filter(lambda x: 'png' in x, high_list)
+        low_list = glob(folder_path + '/low/*.png')
+        high_list = glob(folder_path +  '/high/*.png')
         low_list = sorted(low_list)
         high_list = sorted(high_list)
         pairs = []
         for idx, f_name in tqdm(enumerate(low_list)):
             pairs.append(
-                [cv2.cvtColor(cv2.imread(os.path.join(folder_path, 'low', f_name)), cv2.COLOR_BGR2RGB),  # [:, 4:-4, :],
-                 cv2.cvtColor(cv2.imread(os.path.join(folder_path, 'high', high_list[idx])), cv2.COLOR_BGR2RGB),
+                [#cv2.cvtColor(cv2.imread(os.path.join(folder_path, 'low', f_name)), cv2.COLOR_BGR2RGB),  # [:, 4:-4, :],
+                 #cv2.cvtColor(cv2.imread(os.path.join(folder_path, 'high', high_list[idx])), cv2.COLOR_BGR2RGB),
                  # [:, 4:-4, :],
-                 f_name.split('.')[0]])
+                 
+                 f_name, #f_name.split('.')[0]
+                 high_list[idx]])
             # if idx > 10: break
-            pairs[-1].append(self.hiseq_color_cv2_img(pairs[-1][0]))
+            #pairs[-1].append(self.hiseq_color_cv2_img(pairs[-1][0]))
         return pairs
 
     def hiseq_color_cv2_img(self, img):
@@ -68,7 +73,13 @@ class LoL_Dataset(data.Dataset):
         return result
 
     def __getitem__(self, item):
-        lr, hr, f_name, his = self.pairs[item]
+        #lr, hr, f_name, his = self.pairs[item] 
+        low_name, high_name = self.pairs[item]
+        
+        lr = cv2.cvtColor(cv2.imread(low_name), cv2.COLOR_BGR2RGB)
+        hr = cv2.cvtColor(cv2.imread(high_name), cv2.COLOR_BGR2RGB)
+        his = self.hiseq_color_cv2_img(cv2.imread(low_name))
+        
         if self.histeq_as_input:
             lr = his
 
@@ -111,7 +122,9 @@ class LoL_Dataset(data.Dataset):
             his = self.to_tensor(his)
             lr = torch.cat([lr, his], dim=0)
 
-        return {'LQ': lr, 'GT': hr, 'LQ_path': f_name, 'GT_path': f_name}
+        #return {'LQ': lr, 'GT': hr, 'LQ_path': f_name, 'GT_path': f_name}
+        return {'LQ': lr, 'GT': hr, 'LQ_path': low_name, 'GT_path': high_name}
+        
 
 
 class LoL_Dataset_v2(data.Dataset):
